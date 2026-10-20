@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · LikedByGenre</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" asp-controller="Home" asp-action="Index">LikedByGenre</a>
+        <nav>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Library" asp-action="Index">Бібліотека</a>
+                <a asp-controller="Genres" asp-action="Index">Жанри</a>
+                <a asp-controller="Playlists" asp-action="Index">Плейлисти</a>
+                <span class="user">@User.Identity?.Name</span>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                    <button type="submit" class="link-button">Вийти</button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login">Увійти</a>
+            }
+        </nav>
+    </header>
+    <main class="page">
+        @if (TempData["Status"] is string status)
+        {
+            <div class="banner ok">@status</div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="banner err">@error</div>
+        }
+        @RenderBody()
+    </main>
+</body>
+</html>

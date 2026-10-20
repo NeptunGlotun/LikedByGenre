@@ -1,0 +1,34 @@
+@model LibraryStatus
+@{
+    ViewData["Title"] = "Бібліотека";
+}
+
+<h1>Бібліотека</h1>
+<p>Імпорт іде двома кроками, щоб не зірвати запит на тисячах артистів.</p>
+
+<div class="cards">
+    <article class="card">
+        <strong>@Model.TrackCount</strong>
+        <span>лайкнутих пісень у базі</span>
+    </article>
+    <article class="card">
+        <strong>@Model.ArtistCount</strong>
+        <span>унікальних артистів</span>
+    </article>
+    <article class="card">
+        <strong>@Model.PendingArtistGenres</strong>
+        <span>артистів без жанру</span>
+    </article>
+</div>
+
+<div class="actions">
+    <form asp-action="ImportTracks" method="post">
+        <button class="button" type="submit">1. Завантажити Liked Songs</button>
+    </form>
+    <form asp-action="ImportGenres" method="post">
+        <button class="button secondary" type="submit" @(Model.PendingArtistGenres == 0 ? "disabled" : null)>
+            2. Підтягнути жанри артистів (по @LibraryImportService.ArtistBatchSize)
+        </button>
+    </form>
+    <a class="button ghost" asp-controller="Genres" asp-action="Index">Переглянути групи</a>
+</div>

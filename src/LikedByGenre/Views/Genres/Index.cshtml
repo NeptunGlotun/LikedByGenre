@@ -1,0 +1,27 @@
+@model IReadOnlyList<GenreGroupSummary>
+@{
+    ViewData["Title"] = "Жанри";
+}
+
+<h1>Групи жанрів</h1>
+<p>Жанр трека береться з основного артиста. Якщо тег Spotify невідомий або порожній — група Other.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Група</th>
+            <th>Пісень</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var group in Model)
+    {
+        <tr>
+            <td>@group.Name</td>
+            <td>@group.TrackCount</td>
+            <td><a asp-action="Details" asp-route-slug="@group.Slug">Список</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

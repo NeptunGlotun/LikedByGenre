@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Реєстрація користувача";
+}
+
+<div class="card" style="max-width: 480px; margin: 40px auto; padding: 24px;">
+    <h2>Реєстрація локального користувача</h2>
+    <p style="color: #a0a0a0; font-size: 0.9rem;">
+        Створення нового локального облікового запису. Пароль буде надійно хешований за алгоритмом <strong>BCrypt</strong> з індивідуальною сіллю (параметр вартості workFactor = 12).
+    </p>
+
+    <form asp-action="Register" method="post" style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+        @Html.AntiForgeryToken()
+
+        <div>
+            <label for="username" style="display: block; margin-bottom: 6px;">Бажане ім'я користувача (Логін):</label>
+            <input type="text" id="username" name="username" required 
+                   style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: #fff;" />
+        </div>
+
+        <div>
+            <label for="password" style="display: block; margin-bottom: 6px;">Пароль (мінімум 8 символів):</label>
+            <input type="password" id="password" name="password" minlength="8" required 
+                   style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: #fff;" />
+        </div>
+
+        <div>
+            <label for="confirmPassword" style="display: block; margin-bottom: 6px;">Підтвердження пароля:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" minlength="8" required 
+                   style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: #fff;" />
+        </div>
+
+        <button type="submit" class="button" style="margin-top: 10px; width: 100%; text-align: center;">Зареєструватися</button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <span style="color: #888;">Вже маєте акаунт?</span>
+        <a asp-action="Login" style="color: #1db954; text-decoration: none; font-weight: bold; margin-left: 6px;">Увійти</a>
+    </div>
+</div>

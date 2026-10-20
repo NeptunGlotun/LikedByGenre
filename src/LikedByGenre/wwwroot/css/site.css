@@ -1,0 +1,67 @@
+:root {
+    --bg: #121212;
+    --panel: #181818;
+    --line: #2a2a2a;
+    --text: #f5f5f5;
+    --muted: #b3b3b3;
+    --accent: #1db954;
+    --danger: #e91429;
+}
+
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Segoe UI, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+a { color: var(--accent); text-decoration: none; }
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #000;
+    border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; color: var(--text); }
+nav { display: flex; gap: 1rem; align-items: center; }
+.user { color: var(--muted); }
+.page { max-width: 960px; margin: 2rem auto; padding: 0 1rem 4rem; }
+.hero { background: var(--panel); padding: 2rem; border-radius: 16px; }
+.button {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+.button.secondary { background: #fff; }
+.button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.button:disabled { opacity: 0.5; cursor: not-allowed; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.card {
+    background: var(--panel);
+    padding: 1.2rem;
+    border-radius: 12px;
+}
+.card strong { display: block; font-size: 2rem; }
+.actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
+table { width: 100%; border-collapse: collapse; background: var(--panel); }
+th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--line); }
+.banner { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+.banner.ok { background: #143d24; }
+.banner.err { background: #3d1418; }
+.inline { display: inline; }
+.link-button {
+    background: none;
+    border: 0;
+    color: var(--accent);
+    cursor: pointer;
+    font: inherit;
+}
+p, span { color: var(--muted); }
+h1, h2 { margin-top: 0; }

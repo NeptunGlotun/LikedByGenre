@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Головна";
+}
+
+<section class="hero">
+    <h1>Лайкнуті пісні — по жанрах</h1>
+    <p>
+        Додаток забирає Liked Songs зі Spotify, розкладає треки за жанром основного артиста
+        і дозволяє створити окремі плейлисти в акаунті.
+    </p>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="button" asp-controller="Library" asp-action="Index">Відкрити бібліотеку</a>
+    }
+    else
+    {
+        <a class="button" asp-controller="Account" asp-action="Login">Увійти через Spotify</a>
+    }
+</section>
