@@ -40,10 +40,12 @@ public class AccountController : Controller
             return View();
         }
 
+        var userRole = string.IsNullOrWhiteSpace(user.Role) ? "User" : user.Role;
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.SpotifyId ?? user.Username),
-            new(ClaimTypes.Name, user.Username)
+            new(ClaimTypes.Name, user.Username),
+            new(ClaimTypes.Role, userRole)
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -97,18 +99,29 @@ public class AccountController : Controller
         // Безпечне хешування пароля за допомогою BCrypt із сіллю та параметром вартості (workFactor: 12)
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
 
+        // Перший зареєстрований користувач автоматично отримує роль Admin, решта - User
+        var isFirstUser = !await _db.Users.AnyAsync();
+        var role = isFirstUser || normalizedUsername.Equals("admin", StringComparison.OrdinalIgnoreCase) ? "Admin" : "User";
+
         var newUser = new User
         {
             Username = normalizedUsername,
             PasswordHash = passwordHash,
+            Role = role,
             CreatedAt = DateTime.UtcNow
         };
 
         _db.Users.Add(newUser);
         await _db.SaveChangesAsync();
 
-        TempData["Success"] = "Обліковий запис успішно створено. Увійдіть за допомогою своїх облікових даних.";
+        TempData["Success"] = $"Обліковий запис успішно створено (роль: {role}). Увійдіть за допомогою своїх облікових даних.";
         return RedirectToAction(nameof(Login));
+    }
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 
     public IActionResult ChallengeSpotify()

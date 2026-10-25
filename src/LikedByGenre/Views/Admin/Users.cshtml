@@ -1,0 +1,60 @@
+@model IEnumerable<LikedByGenre.Models.User>
+@{
+    ViewData["Title"] = "Керування користувачами та ролями";
+}
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h1>Керування користувачами та ролями (RBAC)</h1>
+            <p style="color: #94a3b8; margin-top: 4px;">
+                Призначення ролей <code>User</code> та <code>Admin</code> згідно з політикою мінімальних привілеїв.
+            </p>
+        </div>
+        <a asp-action="Index" class="btn">&larr; До панелі</a>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid #282828; text-align: left; color: #64748b; font-size: 0.85rem;">
+                <th style="padding: 12px 10px;">ID</th>
+                <th style="padding: 12px 10px;">Логін</th>
+                <th style="padding: 12px 10px;">Поточна роль</th>
+                <th style="padding: 12px 10px;">Spotify ID</th>
+                <th style="padding: 12px 10px;">Дата реєстрації</th>
+                <th style="padding: 12px 10px; text-align: right;">Дія (зміна ролі)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr style="border-bottom: 1px solid #1f1f1f;">
+                    <td style="padding: 12px 10px; color: #64748b;">#@user.Id</td>
+                    <td style="padding: 12px 10px; font-weight: bold;">@user.Username</td>
+                    <td style="padding: 12px 10px;">
+                        <span style="display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; background: @(user.Role == "Admin" ? "#854d0e; color: #fef08a" : "#1e293b; color: #94a3b8");">
+                            @user.Role
+                        </span>
+                    </td>
+                    <td style="padding: 12px 10px; color: #94a3b8; font-family: monospace;">@(user.SpotifyId ?? "—")</td>
+                    <td style="padding: 12px 10px; color: #64748b;">@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td style="padding: 12px 10px; text-align: right;">
+                        <form asp-action="ChangeRole" method="post" style="display: inline-block;">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            @if (user.Role == "Admin")
+                            {
+                                <input type="hidden" name="newRole" value="User" />
+                                <button type="submit" class="btn" style="background: #334155; font-size: 0.85rem; padding: 6px 12px;">Зробити User</button>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="newRole" value="Admin" />
+                                <button type="submit" class="btn" style="background: #eab308; color: #000; font-size: 0.85rem; padding: 6px 12px;">Зробити Admin</button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

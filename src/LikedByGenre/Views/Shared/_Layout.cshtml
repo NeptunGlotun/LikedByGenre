@@ -15,7 +15,11 @@
                 <a asp-controller="Library" asp-action="Index">Бібліотека</a>
                 <a asp-controller="Genres" asp-action="Index">Жанри</a>
                 <a asp-controller="Playlists" asp-action="Index">Плейлисти</a>
-                <span class="user">@User.Identity?.Name</span>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" style="color: #f59e0b; font-weight: bold;">Адміністрування</a>
+                }
+                <span class="user">@User.Identity?.Name @(User.IsInRole("Admin") ? "(Admin)" : "")</span>
                 <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
                     <button type="submit" class="link-button">Вийти</button>
                 </form>

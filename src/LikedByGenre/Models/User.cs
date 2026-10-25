@@ -10,5 +10,11 @@ public class User
 
     public string? SpotifyId { get; set; }
 
+    /// <summary>
+    /// Роль користувача для рольової моделі керування доступом (RBAC).
+    /// Можливі значення: "Admin" або "User".
+    /// </summary>
+    public string Role { get; set; } = "User";
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

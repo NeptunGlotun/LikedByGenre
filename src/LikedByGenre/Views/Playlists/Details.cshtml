@@ -1,0 +1,48 @@
+@model LikedByGenre.Models.PlaylistExport
+@{
+    ViewData["Title"] = $"Деталі плейлиста · {Model.Name}";
+}
+
+<div class="card" style="max-width: 700px; margin: 20px auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>@Model.Name</h1>
+        <a asp-action="Index" class="btn">&larr; До списку</a>
+    </div>
+
+    <div style="background: #181818; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #1db954;">Параметри об'єкта (DAC)</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #282828;">
+                <td style="padding: 8px 0; color: #64748b;">ID запису:</td>
+                <td style="padding: 8px 0; font-family: monospace;">#@Model.Id</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #282828;">
+                <td style="padding: 8px 0; color: #64748b;">Власник ресурсу (OwnerSpotifyId):</td>
+                <td style="padding: 8px 0; font-family: monospace; color: #38bdf8;">@Model.OwnerSpotifyId</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #282828;">
+                <td style="padding: 8px 0; color: #64748b;">Spotify Playlist ID:</td>
+                <td style="padding: 8px 0; font-family: monospace;">@Model.SpotifyPlaylistId</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #282828;">
+                <td style="padding: 8px 0; color: #64748b;">Жанрова група:</td>
+                <td style="padding: 8px 0;">@(Model.GenreGroup?.Name ?? "—")</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #282828;">
+                <td style="padding: 8px 0; color: #64748b;">Кількість треків:</td>
+                <td style="padding: 8px 0; font-weight: bold;">@Model.TrackCount</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; color: #64748b;">Дата експорту:</td>
+                <td style="padding: 8px 0;">@Model.CreatedAt.ToLocalTime().ToString("f")</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Видалити цей плейлист?');">
+            <button type="submit" class="btn" style="background: #dc2626; color: white;">Видалити плейлист</button>
+        </form>
+        <a asp-action="Index" class="btn secondary">Назад</a>
+    </div>
+</div>

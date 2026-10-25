@@ -37,7 +37,7 @@ builder.Services.AddAuthentication(options =>
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     })
@@ -67,11 +67,20 @@ builder.Services.AddAuthentication(options =>
                 response.EnsureSuccessStatusCode();
                 using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
                 context.RunClaimActions(payload.RootElement);
+
+                if (context.Identity != null && !context.Identity.HasClaim(c => c.Type == ClaimTypes.Role))
+                {
+                    context.Identity.AddClaim(new Claim(ClaimTypes.Role, "User"));
+                }
             }
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireUser", policy => policy.RequireRole("User", "Admin"));
+});
 
 var app = builder.Build();
 

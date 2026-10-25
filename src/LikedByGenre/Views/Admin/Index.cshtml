@@ -1,0 +1,65 @@
+@model IEnumerable<LikedByGenre.Models.User>
+@{
+    ViewData["Title"] = "Панель адміністратора";
+}
+
+<div class="card" style="margin-bottom: 24px;">
+    <h1>Панель керування системою (RBAC: Admin)</h1>
+    <p style="color: #94a3b8;">
+        Цей розділ доступний виключно для облікових записів із роллю <strong>Admin</strong>. Перевірка виконується безпосередньо через <code>[Authorize(Roles = "Admin")]</code>.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 20px;">
+        <div style="background: #181818; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+            <div style="color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Користувачів</div>
+            <div style="font-size: 2rem; font-weight: bold; color: #1db954;">@ViewBag.TotalUsers</div>
+        </div>
+        <div style="background: #181818; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+            <div style="color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Треків у базі</div>
+            <div style="font-size: 2rem; font-weight: bold; color: #38bdf8;">@ViewBag.TotalTracks</div>
+        </div>
+        <div style="background: #181818; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+            <div style="color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Артистів</div>
+            <div style="font-size: 2rem; font-weight: bold; color: #f43f5e;">@ViewBag.TotalArtists</div>
+        </div>
+        <div style="background: #181818; padding: 16px; border-radius: 8px; border: 1px solid #282828;">
+            <div style="color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Експортів плейлистів</div>
+            <div style="font-size: 2rem; font-weight: bold; color: #fbbf24;">@ViewBag.TotalExports</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2>Останні зареєстровані користувачі</h2>
+        <a asp-action="Users" class="btn" style="background: #1db954; color: #000;">Керування користувачами &rarr;</a>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid #282828; text-align: left; color: #64748b; font-size: 0.85rem;">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Логін</th>
+                <th style="padding: 10px;">Роль (RBAC)</th>
+                <th style="padding: 10px;">Spotify ID</th>
+                <th style="padding: 10px;">Дата реєстрації</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr style="border-bottom: 1px solid #1f1f1f;">
+                    <td style="padding: 10px; color: #64748b;">#@user.Id</td>
+                    <td style="padding: 10px; font-weight: 500;">@user.Username</td>
+                    <td style="padding: 10px;">
+                        <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; background: @(user.Role == "Admin" ? "#854d0e; color: #fef08a" : "#1e293b; color: #94a3b8");">
+                            @user.Role
+                        </span>
+                    </td>
+                    <td style="padding: 10px; color: #94a3b8; font-family: monospace;">@(user.SpotifyId ?? "—")</td>
+                    <td style="padding: 10px; color: #64748b;">@user.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

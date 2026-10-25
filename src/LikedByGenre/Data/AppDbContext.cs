@@ -78,6 +78,7 @@ public class AppDbContext : DbContext
             entity.Property(x => x.Username).HasMaxLength(64);
             entity.Property(x => x.PasswordHash).HasMaxLength(128);
             entity.Property(x => x.SpotifyId).HasMaxLength(64);
+            entity.Property(x => x.Role).HasMaxLength(32).HasDefaultValue("User");
         });
     }
 }

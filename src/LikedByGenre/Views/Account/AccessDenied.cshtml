@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Відмовлено у доступі (403 Forbidden)";
+}
+
+<div class="card" style="max-width: 650px; margin: 40px auto; border-top: 4px solid #e53e3e;">
+    <h1 style="color: #e53e3e; margin-bottom: 12px;">🚫 403 — Відмовлено у доступі</h1>
+    <p style="font-size: 1.1rem; color: #cbd5e1; margin-bottom: 16px;">
+        У вас недостатньо повноважень або ви не є власником запитаного ресурсу для виконання цієї операції.
+    </p>
+
+    <div style="background: rgba(229, 62, 62, 0.1); border-left: 3px solid #e53e3e; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px;">
+        <strong>Застосована політика безпеки:</strong>
+        <ul style="margin: 8px 0 0 20px; color: #94a3b8; font-size: 0.95rem;">
+            <li><strong>Рольова модель (RBAC):</strong> Доступ до адміністративних модулів вимагає ролі <code>Admin</code>.</li>
+            <li><strong>Дискреційна модель (DAC):</strong> Модифікація та перегляд приватних об'єктів (треків, списків експорту) дозволені виключно їхньому безпосередньому власнику.</li>
+        </ul>
+    </div>
+
+    <p style="color: #64748b; font-size: 0.9rem;">
+        Поточний користувач: <strong>@(User.Identity?.Name ?? "Гість")</strong> | Роль: <strong>@(User.IsInRole("Admin") ? "Admin" : (User.Identity?.IsAuthenticated == true ? "User" : "Гість"))</strong>
+    </p>
+
+    <div style="margin-top: 24px; display: flex; gap: 12px;">
+        <a asp-controller="Home" asp-action="Index" class="btn">На головну</a>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Library" asp-action="Index" class="btn" style="background: #1db954; color: #000;">До моєї бібліотеки</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn" style="background: #1db954; color: #000;">Увійти в акаунт</a>
+        }
+    </div>
+</div>
