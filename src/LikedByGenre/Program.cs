@@ -21,6 +21,7 @@ builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddScoped<LibraryImportService>();
 builder.Services.AddScoped<GenreClassificationService>();
 builder.Services.AddScoped<PlaylistExportService>();
+builder.Services.AddSingleton<ISymmetricEncryptionService, AesGcmEncryptionService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
