@@ -10,17 +10,20 @@ public class PlaylistExportService
     private readonly SpotifyApiClient _spotify;
     private readonly CurrentUser _user;
     private readonly GenreClassificationService _classification;
+    private readonly IIntegrityService _integrity;
 
     public PlaylistExportService(
         AppDbContext db,
         SpotifyApiClient spotify,
         CurrentUser user,
-        GenreClassificationService classification)
+        GenreClassificationService classification,
+        IIntegrityService integrity)
     {
         _db = db;
         _spotify = spotify;
         _user = user;
         _classification = classification;
+        _integrity = integrity;
     }
 
     public async Task<IReadOnlyList<PlaylistExport>> GetExportsAsync(CancellationToken cancellationToken)
@@ -53,17 +56,39 @@ public class PlaylistExportService
             cancellationToken);
         await _spotify.AddPlaylistItemsAsync(accessToken, playlistId, uris, cancellationToken);
 
+        var now = DateTime.UtcNow;
+        var ownerSpotifyId = _user.SpotifyId;
+        var trackCount = uris.Count;
+
+        // Формування криптографічного HMAC-підпису для забезпечення цілісності та автентичності
+        var integritySignature = _integrity.SignExport(ownerSpotifyId, playlistId, trackCount, now);
+
         var export = new PlaylistExport
         {
-            OwnerSpotifyId = _user.SpotifyId,
+            OwnerSpotifyId = ownerSpotifyId,
             GenreGroupId = group.Id,
             SpotifyPlaylistId = playlistId,
             Name = name,
-            TrackCount = uris.Count,
-            CreatedAt = DateTime.UtcNow
+            TrackCount = trackCount,
+            CreatedAt = now,
+            IntegritySignature = integritySignature
         };
         _db.PlaylistExports.Add(export);
         await _db.SaveChangesAsync(cancellationToken);
         return export;
+    }
+
+    /// <summary>
+    /// Перевіряє цілісність та автентичність запису експорту плейлиста.
+    /// Повертає true, якщо запис не було підроблено або модифіковано сторонніми особами.
+    /// </summary>
+    public bool VerifyExportIntegrity(PlaylistExport export)
+    {
+        return _integrity.VerifyExport(
+            export.OwnerSpotifyId,
+            export.SpotifyPlaylistId,
+            export.TrackCount,
+            export.CreatedAt,
+            export.IntegritySignature);
     }
 }

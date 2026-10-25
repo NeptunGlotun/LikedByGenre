@@ -70,6 +70,7 @@ public class AppDbContext : DbContext
             entity.Property(x => x.OwnerSpotifyId).HasMaxLength(64);
             entity.Property(x => x.SpotifyPlaylistId).HasMaxLength(64);
             entity.Property(x => x.Name).HasMaxLength(256);
+            entity.Property(x => x.IntegritySignature).HasMaxLength(64);
         });
 
         modelBuilder.Entity<User>(entity =>

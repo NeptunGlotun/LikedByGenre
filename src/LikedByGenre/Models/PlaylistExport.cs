@@ -10,4 +10,10 @@ public class PlaylistExport
     public required string Name { get; set; }
     public int TrackCount { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// HMAC-SHA256 підпис цілісності та автентичності запису експорту.
+    /// Захищає від несанкціонованої модифікації атрибутів експорту в БД.
+    /// </summary>
+    public string? IntegritySignature { get; set; }
 }
