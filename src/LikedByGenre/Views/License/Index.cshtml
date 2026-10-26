@@ -1,0 +1,81 @@
+@model LikedByGenre.Models.LicenseValidationResult
+@{
+    ViewData["Title"] = "Ліцензія та захист продукту";
+    var lic = Model.License;
+}
+
+<div class="card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Ліцензія та цифрова автентичність</h1>
+            <p style="color: #94a3b8; margin-top: 4px;">
+                Контроль ліцензійних умов та протидія копіюванню за допомогою цифрового підпису <strong>RSA-PSS (3072 біт, SHA-256)</strong>.
+            </p>
+        </div>
+        <div>
+            <span style="display: inline-block; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 0.95rem; background: @(Model.IsValid ? "#166534; color: #bbf7d0" : "#991b1b; color: #fecaca");">
+                @(Model.IsValid ? "✓ ЛІЦЕНЗІЯ АКТИВНА" : "✕ НЕВАЛІДНА ЛІЦЕНЗІЯ")
+            </span>
+        </div>
+    </div>
+
+    <div style="margin-top: 16px; padding: 12px 16px; border-radius: 6px; background: @(Model.IsValid ? "rgba(22, 101, 52, 0.15)" : "rgba(153, 27, 27, 0.15)"); border-left: 4px solid @(Model.IsValid ? "#22c55e" : "#ef4444");">
+        <strong>Статус перевірки:</strong> @Model.Message
+    </div>
+</div>
+
+@if (lic != null)
+{
+    <div class="card" style="margin-bottom: 24px;">
+        <h2>Параметри встановленої ліцензії</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px;">
+            <div style="background: #181818; padding: 14px; border-radius: 6px; border: 1px solid #282828;">
+                <div style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Власник ліцензії</div>
+                <div style="font-weight: bold; color: #f8fafc; margin-top: 4px;">@lic.Licensee</div>
+            </div>
+            <div style="background: #181818; padding: 14px; border-radius: 6px; border: 1px solid #282828;">
+                <div style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Тарифний план</div>
+                <div style="font-weight: bold; color: #38bdf8; margin-top: 4px;">@lic.Tier</div>
+            </div>
+            <div style="background: #181818; padding: 14px; border-radius: 6px; border: 1px solid #282828;">
+                <div style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Діє до</div>
+                <div style="font-weight: bold; color: @(lic.IsExpired ? "#ef4444" : "#22c55e"); margin-top: 4px;">
+                    @lic.ValidUntil.ToString("yyyy-MM-dd HH:mm") UTC
+                </div>
+            </div>
+            <div style="background: #181818; padding: 14px; border-radius: 6px; border: 1px solid #282828;">
+                <div style="color: #64748b; font-size: 0.8rem; text-transform: uppercase;">Ліміт треків / експортів</div>
+                <div style="font-weight: bold; color: #fbbf24; margin-top: 4px;">@lic.MaxTracks / @lic.MaxPlaylists</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 24px; margin-bottom: 8px;">Активовані модулі та можливості:</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            @foreach (var feature in lic.Features)
+            {
+                <span style="background: #1e293b; color: #38bdf8; padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid #334155;">
+                    ✓ @feature
+                </span>
+            }
+        </div>
+    </div>
+}
+
+<div class="card">
+    <h2>Тестування та перевірка сторонньої ліцензії (RSA-PSS)</h2>
+    <p style="color: #94a3b8; font-size: 0.9rem;">
+        Введіть JSON-контент ліцензії та відповідний цифровий підпис у Base64. Система виконає верифікацію відкритим ключем.
+    </p>
+
+    <form asp-action="VerifyCustom" method="post" style="margin-top: 16px;">
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85rem;">Вміст ліцензії (JSON):</label>
+            <textarea name="licenseJson" rows="6" style="width: 100%; font-family: monospace; background: #181818; color: #e2e8f0; border: 1px solid #334155; border-radius: 4px; padding: 8px;"></textarea>
+        </div>
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85rem;">Цифровий підпис (Base64):</label>
+            <textarea name="signatureBase64" rows="3" style="width: 100%; font-family: monospace; background: #181818; color: #e2e8f0; border: 1px solid #334155; border-radius: 4px; padding: 8px;"></textarea>
+        </div>
+        <button type="submit" class="btn" style="background: #1db954; color: #000; font-weight: bold;">Перевірити цифровий підпис &rarr;</button>
+    </form>
+</div>

@@ -1,0 +1,17 @@
+{
+  "product_id": "LikedByGenre-SSS",
+  "license_id": "LIC-2026-PZ41-0001-RYABCHUK",
+  "licensee": "Рябчук Ігор (група ПЗ-41, варіант 1)",
+  "tier": "Pro-Subscription",
+  "issued_at": "2026-10-26T00:00:00Z",
+  "valid_until": "2026-12-31T23:59:59Z",
+  "max_tracks": 10000,
+  "max_playlists": 100,
+  "features": [
+    "LibrarySync",
+    "AutoClassification",
+    "PlaylistExport",
+    "AdvancedAnalytics",
+    "BatchProcessing"
+  ]
+}

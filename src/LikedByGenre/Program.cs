@@ -23,6 +23,7 @@ builder.Services.AddScoped<GenreClassificationService>();
 builder.Services.AddScoped<PlaylistExportService>();
 builder.Services.AddSingleton<ISymmetricEncryptionService, AesGcmEncryptionService>();
 builder.Services.AddSingleton<IIntegrityService, HmacIntegrityService>();
+builder.Services.AddSingleton<ILicenseValidationService, RsaPssLicenseValidationService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
